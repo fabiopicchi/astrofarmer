@@ -28,36 +28,18 @@ class PlayState extends FlxState
 
     private function loadTilemapLayer(tileLayer:TiledLayer):FlxTilemap
     {
-        var tileSheetName:String = tileLayer.properties.get("tileset");
         var tileSet:TiledTileSet = null;
-        if (tileSheetName == null)
-            throw "'tileset' property not defined for the '" + tileLayer.name + "' layer. Please add the property to the layer.";
         for (ts in tileLayer.map.tilesets)
         {
-            if (ts.name == tileSheetName)
-            {
-                tileSet = ts;
-                break;
-            }
+            tileSet = ts;
+            break;
         }
-        if (tileSet == null)
-            throw "Tileset '" + tileSheetName + " not found. Did you mispell the 'tilesheet' property in " + tileLayer.name + "' layer?";
         var imagePath = new Path(tileSet.imageSource);
         var processedPath = TILESET_PATH + imagePath.file + "." + imagePath.ext;
         var tilemap:FlxTilemap = new FlxTilemap();
         tilemap.widthInTiles = tileLayer.map.width;
         tilemap.heightInTiles = tileLayer.map.height;
         tilemap.loadMap(tileLayer.tileArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
-
-        if(tileLayer.properties.contains("collidable"))
-        {
-            var collidableTiles:Array<Int> = Json.parse(tileLayer.properties.get("collidable"));
-            for(i in 0...tileSet.numTiles)
-            {
-                if(collidableTiles.indexOf(i) != -1) tilemap.setTileProperties(i, FlxObject.ANY);
-                else tilemap.setTileProperties(i, FlxObject.NONE);
-            }
-        }
         return tilemap;
     }
 

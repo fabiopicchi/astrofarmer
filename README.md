@@ -1,6 +1,6 @@
 TMX file rules:
 
-    - File must be Base64 encoded
-    - Every tile layer must have a property named "tileset" indicating the tileset used on that layer
-    - Tile layers may have the collidable property that should be written as an array of integers, indicating the number of the collidable tiles(counting from 1) on the tileset. Ex: collidable: [1, 2].
+    - File must be Base64 encoded.
+    - It is assumed that the file uses only one tileset so layers don't need to specify which tileset they're using.
+    - Tile layers may have the collidable property set. If set then all the tiles on this layer will be collidable.
     - In every object, the values of x, y, width and height specified will be atributed to the object's hitbox and not its bounding box.

@@ -3,13 +3,17 @@
  <tileset firstgid="1" name="sample" tilewidth="16" tileheight="16">
   <image source="../images/sample-tileset.png" width="32" height="16"/>
  </tileset>
- <layer name="layer-1" width="20" height="20">
+ <layer name="background" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYBzFo3gUj+JRPIpJxADrnAGR
+  </data>
+ </layer>
+ <layer name="collision" width="20" height="20">
   <properties>
-   <property name="collidable" value="[2]"/>
-   <property name="tileset" value="sample"/>
+   <property name="collidable" value="true"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBzFwxYzIeGBdsuoewcHHmpuprZ7KTWPCQ+mRC8x5pGqn9YYADZPAdo=
+   eJxjYBgFwxkwIeGhAEbdS3sw1NxMbfdSah4THkyJXmLMI1U/rTEAm4gAkw==
   </data>
  </layer>
  <objectgroup name="objects">
