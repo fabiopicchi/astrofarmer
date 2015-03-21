@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" nextobjectid="5">
  <tileset firstgid="1" name="sample" tilewidth="16" tileheight="16">
   <image source="../images/sample-tileset.png" width="32" height="16"/>
  </tileset>
  <layer name="layer-1" width="20" height="20">
   <properties>
+   <property name="collidable" value="[2]"/>
    <property name="tileset" value="sample"/>
   </properties>
   <data encoding="base64" compression="zlib">
    eJxjZGBgYBzFwxYzIeGBdsuoewcHHmpuprZ7KTWPCQ+mRC8x5pGqn9YYADZPAdo=
   </data>
  </layer>
+ <objectgroup name="objects">
+  <object id="4" x="2" y="292" width="12" height="12">
+   <properties>
+    <property name="gravity" value="1500"/>
+    <property name="jump-height" value="40"/>
+    <property name="name" value="player"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

@@ -1,14 +1,17 @@
 package;
 
 import haxe.io.Path;
+import haxe.Json;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.tile.FlxTilemap;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
+import flixel.group.FlxGroup;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledLayer;
 import flixel.addons.editors.tiled.TiledTileSet;
@@ -20,14 +23,16 @@ class PlayState extends FlxState
 {
     private var map:TiledMap;
     private inline static var TILESET_PATH:String = "assets/images/";
+    private var playerCollision:FlxGroup;
+    private var player:Player;
 
-    private function loadTilemapLayer(mapData:TiledMap, tileLayer:TiledLayer):FlxTilemap
+    private function loadTilemapLayer(tileLayer:TiledLayer):FlxTilemap
     {
         var tileSheetName:String = tileLayer.properties.get("tileset");
         var tileSet:TiledTileSet = null;
         if (tileSheetName == null)
             throw "'tileset' property not defined for the '" + tileLayer.name + "' layer. Please add the property to the layer.";
-        for (ts in mapData.tilesets)
+        for (ts in tileLayer.map.tilesets)
         {
             if (ts.name == tileSheetName)
             {
@@ -40,9 +45,19 @@ class PlayState extends FlxState
         var imagePath = new Path(tileSet.imageSource);
         var processedPath = TILESET_PATH + imagePath.file + "." + imagePath.ext;
         var tilemap:FlxTilemap = new FlxTilemap();
-        tilemap.widthInTiles = mapData.width;
-        tilemap.heightInTiles = mapData.height;
+        tilemap.widthInTiles = tileLayer.map.width;
+        tilemap.heightInTiles = tileLayer.map.height;
         tilemap.loadMap(tileLayer.tileArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
+
+        if(tileLayer.properties.contains("collidable"))
+        {
+            var collidableTiles:Array<Int> = Json.parse(tileLayer.properties.get("collidable"));
+            for(i in 0...tileSet.numTiles)
+            {
+                if(collidableTiles.indexOf(i) != -1) tilemap.setTileProperties(i, FlxObject.ANY);
+                else tilemap.setTileProperties(i, FlxObject.NONE);
+            }
+        }
         return tilemap;
     }
 
@@ -53,8 +68,28 @@ class PlayState extends FlxState
     {
         super.create();
 
+        playerCollision = new FlxGroup();
+
         var map:TiledMap = new TiledMap("assets/data/sample-stage.tmx");
-        for(l in map.layers) add(loadTilemapLayer(map, l));
+        for(l in map.layers)
+        {
+            var tilemap:FlxTilemap = loadTilemapLayer(l);
+            add(tilemap);
+            if(l.properties.contains("collidable")) playerCollision.add(tilemap);
+        }
+
+        for(group in map.objectGroups)
+        {
+            for(object in group.objects)
+            {
+                switch(object.custom.get("name"))
+                {
+                    case "player":
+                        player = new Player(object);
+                        add(player);
+                }
+            }
+        }
     }
 
     /**
@@ -72,5 +107,6 @@ class PlayState extends FlxState
     override public function update():Void
     {
         super.update();
+        FlxG.collide(playerCollision, player);
     }	
 }
