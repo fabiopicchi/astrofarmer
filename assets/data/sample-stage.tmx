@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" nextobjectid="5">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="200" height="200" tilewidth="16" tileheight="16" nextobjectid="8">
  <tileset firstgid="1" name="sample" tilewidth="16" tileheight="16">
   <image source="../images/sample-tileset.png" width="32" height="16"/>
  </tileset>
- <layer name="background" width="20" height="20">
+ <layer name="background" width="200" height="200">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBzFo3gUj+JRPIpJxADrnAGR
+   eJztwwENAAAMw6DOv+lbuABIWDVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV1ccD91acQQ==
   </data>
  </layer>
- <layer name="collision" width="20" height="20">
+ <layer name="collision" width="200" height="200">
   <properties>
    <property name="collidable" value="true"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFwxkwIeGhAEbdS3sw1NxMbfdSah4THkyJXmLMI1U/rTEAm4gAkw==
+   eJzt10FqAgEURMHB+x86CzchQQSTsZ9aBb2SoPi7o16O47hIJrSs+yD2Ubbug9hH2boPYh9l6z6IfZSt+yD2Ubbug9hH2boPYh9l6z6IfZSt+yD2Ubbug9hH2boPYh9l6z6IfZSt+yD2Ubbug9hH2boPYh9l6z6IfZSdeZN1114xtNhHK7TYRyu02EcrtNhHK7TYRyu0nHmbdddeMbS4SYdb9Py8if9lO97zntpNPvn7zfr5+e3eTZ71++Te4++6ie9Kr4Wr8k2W+1jsp3yLT/XITR7pzl//pvD5cfZm7KOnfJPaPs5Wei1c/cdNbnXtWf1+p9BiH63Qsu6D2EfZug9iH2XrPoh9lK37IPZRtu6D2EfZug9iH2XrPoh9lK37IPZRtu6D2EfZug9iH2XrPoh9lK37IPZRtu6D2EfZug9iH2XrPoh9lK37IPZRtu6D2EfZug9iH2XrPoh9lK37IPZRtu6D2EfZug9iH2XrPoh9lK37IPZRtu6D2AcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwCf5Aj/6J7M=
   </data>
  </layer>
  <objectgroup name="objects">
-  <object id="4" x="2" y="292" width="12" height="12">
+  <object id="4" x="16" y="512" width="12" height="12">
    <properties>
     <property name="gravity" value="1500"/>
     <property name="jump-height" value="40"/>

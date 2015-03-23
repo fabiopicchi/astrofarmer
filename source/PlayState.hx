@@ -5,13 +5,15 @@ import haxe.Json;
 
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.FlxCamera;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.tile.FlxTilemap;
+import flixel.group.FlxGroup;
 import flixel.text.FlxText;
+import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
-import flixel.group.FlxGroup;
+import flixel.util.FlxPoint;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledLayer;
 import flixel.addons.editors.tiled.TiledTileSet;
@@ -72,6 +74,18 @@ class PlayState extends FlxState
                 }
             }
         }
+
+        FlxG.worldBounds.set(0, 0, map.fullWidth, map.fullHeight);
+        FlxG.camera.setBounds(0, 0, map.fullWidth, map.fullHeight);
+
+        //FlxG.camera.follow(player, FlxCamera.STYLE_PLATFORMER, 100);
+
+        //var obj:FlxSprite = new FlxSprite();
+        //obj.makeGraphic(Std.int(FlxG.camera.deadzone.width), Std.int(FlxG.camera.deadzone.height), 0x66FF0000);
+        //obj.x = FlxG.camera.deadzone.x;
+        //obj.y = FlxG.camera.deadzone.y;
+        //obj.scrollFactor.set(0,0);
+        //add(obj);
     }
 
     /**
@@ -90,5 +104,7 @@ class PlayState extends FlxState
     {
         super.update();
         FlxG.collide(playerCollision, player);
+        FlxG.camera.focusOn(new FlxPoint(player.x + (FlxG.mouse.x - player.x) / 10, 
+                    player.y + (FlxG.mouse.y - player.y) / 10));
     }	
 }
