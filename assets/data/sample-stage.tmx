@@ -22,6 +22,7 @@
     <property name="gravity" value="1500"/>
     <property name="jump-height" value="40"/>
     <property name="name" value="player"/>
+    <property name="speed" value="150"/>
    </properties>
   </object>
  </objectgroup>
