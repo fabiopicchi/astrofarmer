@@ -24,6 +24,7 @@ class PlayState extends FlxState
     private var map:TiledMap;
     private inline static var TILESET_PATH:String = "assets/images/";
     private var playerCollision:FlxGroup;
+    private var bulletPool:List<Bullet>;
     private var player:Player;
 
     private function loadTilemapLayer(tileLayer:TiledLayer):FlxTilemap
@@ -43,12 +44,31 @@ class PlayState extends FlxState
         return tilemap;
     }
 
+    private function createBullet(x:Float, y:Float, angle:Float):Void
+    {
+        var b:Bullet;
+        if(bulletPool.isEmpty()) b = new Bullet();
+        else b = bulletPool.pop();
+
+        b.set(x, y, angle);
+        b.destroySignal.add(destroyBullet);
+        add(b);
+    }
+
+    private function destroyBullet(b:Bullet):Void
+    {
+        remove(b);
+        bulletPool.push(b);
+    }
+
     /**
      * Function that is called up when to state is created to set it up. 
      */
     override public function create():Void
     {
         super.create();
+
+        bulletPool = new List<Bullet>();
 
         playerCollision = new FlxGroup();
 
@@ -68,6 +88,7 @@ class PlayState extends FlxState
                 {
                     case "player":
                         player = new Player(object);
+                        player.shootingSignal.add(createBullet);
                         add(player);
                 }
             }
