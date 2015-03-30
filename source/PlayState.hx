@@ -22,7 +22,9 @@ import flixel.addons.editors.tiled.TiledTileSet;
 class PlayState extends FlxState
 {
     private var map:TiledMap;
+	private inline static var STAGE_PATH:String = "assets/data/sample-stage.tmx";
     private inline static var TILESET_PATH:String = "assets/images/";
+	
     private var playerCollision:FlxGroup;
     private var slopeCollision:FlxGroup;
     private var bulletPool:List<Bullet>;
@@ -42,12 +44,42 @@ class PlayState extends FlxState
         playerCollision = new FlxGroup();
         slopeCollision = new FlxGroup();
 
-        var map:TiledMap = new TiledMap("assets/data/sample-stage.tmx");
+        var map:TiledMap = new TiledMap(STAGE_PATH);
+		var tileSet:TiledTileSet;
+        for (ts in map.tilesets)
+        {
+            tileSet = ts;
+            break;
+        }
         for(l in map.layers)
         {
-            var tilemap:FlxTilemap = loadTilemapLayer(l);
+            var tilemap:FlxTilemap = loadTilemapLayer(l, tileSet);
             add(tilemap);
-            if(l.properties.contains("collidable")) playerCollision.add(tilemap);
+            if (l.properties.contains("collidable")) 
+			{
+				playerCollision.add(tilemap);
+				for (i in 0...tileSet.tileProps.length)
+				{
+					var p = tileSet.tileProps[i];
+					if (p != null && p.contains("type"))
+					{
+						var type = p.get("type");
+						switch(type)
+						{
+							case "slope-left" | "slope-right":
+								tilemap.setTileProperties((i + 1), FlxObject.NONE);
+								var slopes = tilemap.getTileCoords((i + 1), false);
+								var slope:FlxSlope;
+								for (i in 0...slopes.length)
+								{
+									slope = new FlxSlope(type.split("-")[1], slopes[i].x, slopes[i].y, map.tileWidth, map.tileHeight);
+									slopeCollision.add(slope);
+									add(slope);
+								}
+						}
+					}
+				}
+			}
         }
 
         var obj:FlxObject;
@@ -89,18 +121,13 @@ class PlayState extends FlxState
     override public function update():Void
     {
         super.update();
+		FlxG.overlap(slopeCollision, player, FlxSlope.separateSlopeX);
         FlxG.collide(playerCollision, player);
-        FlxG.overlap(slopeCollision, player, FlxSlope.separateYSlope);
+		FlxG.overlap(slopeCollision, player, FlxSlope.separateSlopeY);
     }	
 
-    private function loadTilemapLayer(tileLayer:TiledLayer):FlxTilemap
+    private function loadTilemapLayer(tileLayer:TiledLayer, tileSet:TiledTileSet):FlxTilemap
     {
-        var tileSet:TiledTileSet = null;
-        for (ts in tileLayer.map.tilesets)
-        {
-            tileSet = ts;
-            break;
-        }
         var imagePath = new Path(tileSet.imageSource);
         var processedPath = TILESET_PATH + imagePath.file + "." + imagePath.ext;
         var tilemap:FlxTilemap = new FlxTilemap();

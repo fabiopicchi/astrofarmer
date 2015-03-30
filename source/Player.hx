@@ -13,6 +13,8 @@ class Player extends FlxSprite
     private var speed:Float;
     private var shootingInterval:Float;
     private var shootingCooldown:Float;
+	private var JUMP_THRESHOLD:Float = 0.1;
+	private var lastTouchedFloor:Float;
 
     public var shootingSignal:FlxTypedSignal<Float->Float->Float->Void>;
 
@@ -33,15 +35,38 @@ class Player extends FlxSprite
         shootingInterval = 0.1;
         shootingCooldown = 0;
         shootingSignal = new FlxTypedSignal<Float->Float->Float->Void>();
+		
+		lastTouchedFloor = 0;
     }
 
     override public function update():Void
     {
-        if(FlxG.keys.pressed.D) velocity.x = speed;
-        else if(FlxG.keys.pressed.A) velocity.x = -speed;
-        else velocity.x = 0;
+        if (FlxG.keys.pressed.D) 
+		{
+			velocity.x = speed;
+		}
+        else if (FlxG.keys.pressed.A) 
+		{
+			velocity.x = -speed;
+		}
+        else 
+		{
+			velocity.x = 0;
+		}
+		
+		if (!isTouching(FlxObject.FLOOR))
+		{
+			lastTouchedFloor += FlxG.elapsed;
+		}
+		else
+		{
+			lastTouchedFloor = 0;
+		}
 
-        if(FlxG.keys.justPressed.W && isTouching(FlxObject.FLOOR)) velocity.y = -jumpSpeed;
+        if (FlxG.keys.justPressed.W && (lastTouchedFloor <= JUMP_THRESHOLD && velocity.y >= 0))
+		{
+			velocity.y = -jumpSpeed;
+		}
 
         if(shootingCooldown == 0 && FlxG.mouse.pressed) 
         {
