@@ -24,8 +24,74 @@ class PlayState extends FlxState
     private var map:TiledMap;
     private inline static var TILESET_PATH:String = "assets/images/";
     private var playerCollision:FlxGroup;
+    private var slopeCollision:FlxGroup;
     private var bulletPool:List<Bullet>;
     private var player:Player;
+    private var obj1:FlxObject;
+    private var obj2:FlxObject;
+
+    /**
+     * Function that is called up when to state is created to set it up. 
+     */
+    override public function create():Void
+    {
+        super.create();
+
+        bulletPool = new List<Bullet>();
+
+        playerCollision = new FlxGroup();
+        slopeCollision = new FlxGroup();
+
+        var map:TiledMap = new TiledMap("assets/data/sample-stage.tmx");
+        for(l in map.layers)
+        {
+            var tilemap:FlxTilemap = loadTilemapLayer(l);
+            add(tilemap);
+            if(l.properties.contains("collidable")) playerCollision.add(tilemap);
+        }
+
+        var obj:FlxObject;
+        for(group in map.objectGroups)
+        {
+            for(object in group.objects)
+            {
+                switch(object.custom.get("type"))
+                {
+                    case "player":
+                        player = new Player(object);
+                        player.shootingSignal.add(createBullet);
+                    case "slope-left":
+                        obj = new FlxSlope("left", object.x, object.y, object.width, object.height);
+                        slopeCollision.add(obj);
+                        add(obj);
+                    case "slope-right":
+                        obj = new FlxSlope("right", object.x, object.y, object.width, object.height);
+                        slopeCollision.add(obj);
+                        add(obj);
+                }
+            }
+        }
+        add(player);
+    }
+
+    /**
+     * Function that is called when this state is destroyed - you might want to 
+     * consider setting all objects this state uses to null to help garbage collection.
+     */
+    override public function destroy():Void
+    {
+        super.destroy();
+    }
+
+    /**
+     * Function that is called once every frame.
+     */
+    override public function update():Void
+    {
+        super.update();
+        FlxG.collide(playerCollision, player);
+        FlxG.overlap(slopeCollision, player, FlxSlope.separateYSlope);
+    }	
 
     private function loadTilemapLayer(tileLayer:TiledLayer):FlxTilemap
     {
@@ -60,56 +126,4 @@ class PlayState extends FlxState
         remove(b);
         bulletPool.push(b);
     }
-
-    /**
-     * Function that is called up when to state is created to set it up. 
-     */
-    override public function create():Void
-    {
-        super.create();
-
-        bulletPool = new List<Bullet>();
-
-        playerCollision = new FlxGroup();
-
-        var map:TiledMap = new TiledMap("assets/data/sample-stage.tmx");
-        for(l in map.layers)
-        {
-            var tilemap:FlxTilemap = loadTilemapLayer(l);
-            add(tilemap);
-            if(l.properties.contains("collidable")) playerCollision.add(tilemap);
-        }
-
-        for(group in map.objectGroups)
-        {
-            for(object in group.objects)
-            {
-                switch(object.custom.get("name"))
-                {
-                    case "player":
-                        player = new Player(object);
-                        player.shootingSignal.add(createBullet);
-                        add(player);
-                }
-            }
-        }
-    }
-
-    /**
-     * Function that is called when this state is destroyed - you might want to 
-     * consider setting all objects this state uses to null to help garbage collection.
-     */
-    override public function destroy():Void
-    {
-        super.destroy();
-    }
-
-    /**
-     * Function that is called once every frame.
-     */
-    override public function update():Void
-    {
-        super.update();
-        FlxG.collide(playerCollision, player);
-    }	
 }
